@@ -1,0 +1,40 @@
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - main
+  pull_request:
+      branches:
+          - main
+
+permissions:
+  checks: write
+  pull-requests: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      SHELLSPEC_VERSION: 0.28.1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: install ShellSpec
+        run: |
+          mkdir shellspec
+          cd shellspec
+          wget https://github.com/shellspec/shellspec/archive/${{ env.SHELLSPEC_VERSION }}.tar.gz
+          tar xzvf shellspec-${{ env.SHELLSPEC_VERSION }}.tar.gz
+          ln -s shellspec-${{ env.SHELLSPEC_VERSION }}/shellspec ../shellspec
+
+      - name: Run ShellSpec
+        run: |
+          shellspec --output j # run tests and output in JUnit format
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: (!cancelled())
+        with:
+          files: |
+            report/*.xml
