@@ -25,7 +25,7 @@ jobs:
           mkdir shellspec
           cd shellspec
           wget https://github.com/shellspec/shellspec/archive/${{ env.SHELLSPEC_VERSION }}.tar.gz
-          tar xzvf shellspec-${{ env.SHELLSPEC_VERSION }}.tar.gz
+          tar xzvf ${{ env.SHELLSPEC_VERSION }}.tar.gz
           ln -s shellspec-${{ env.SHELLSPEC_VERSION }}/shellspec ../shellspec
 
       - name: Run ShellSpec
