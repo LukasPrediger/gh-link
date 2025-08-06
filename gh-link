@@ -5,7 +5,7 @@ POSITIONAL_ARGS=()
 static=0
 
 function help() {
-    echo "Usage: gh-link [options] <file>"
+    echo "Usage: gh link [options] <file>"
     echo "Create a link to a GitHub file."
     echo "Options:"
     echo "  -s, --static   Create a static link to the commit instead of the current branch"
