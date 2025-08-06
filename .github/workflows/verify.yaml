@@ -27,10 +27,11 @@ jobs:
           wget https://github.com/shellspec/shellspec/archive/${{ env.SHELLSPEC_VERSION }}.tar.gz
           tar xzvf ${{ env.SHELLSPEC_VERSION }}.tar.gz
           ln -s shellspec-${{ env.SHELLSPEC_VERSION }}/shellspec ../shellspec
+          chmod u+x ../shellspec
 
       - name: Run ShellSpec
         run: |
-          shellspec --output j # run tests and output in JUnit format
+          ./shellspec --output j # run tests and output in JUnit format
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
