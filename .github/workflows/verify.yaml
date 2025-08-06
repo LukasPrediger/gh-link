@@ -30,7 +30,7 @@ jobs:
           chmod u+x ../shellspec
 
       - name: Run ShellSpec
-        shell: bash
+        shell: sh
         run: |
           ./shellspec --output j # run tests and output in JUnit format
 
