@@ -1,35 +1,60 @@
 #!/usr/bin/env bash
 set -e
 
-echo "Hello gh-link!"
+POSITIONAL_ARGS=()
+static=0
 
-# Snippets to help get started:
+function help() {
+    echo "Usage: gh-link [options] <file>"
+    echo "Create a link to a GitHub file."
+    echo "Options:"
+    echo "  -s, --static   Create a static link to the commit instead of the current branch"
+}
 
-# Determine if an executable is in the PATH
-# if ! type -p ruby >/dev/null; then
-#   echo "Ruby not found on the system" >&2
-#   exit 1
-# fi
+if [ $# -lt 1 ]; then
+  help
+  exit 1
+fi
 
-# Pass arguments through to another command
-# gh issue list "$@" -R cli/cli
+while [ $# -gt 0 ]; do
+  case "$1" in
+  -s|--static)
+    static=1
+    ;;
+  -h|--help)
+    help
+    exit 0
+    ;;
+  *)
+    POSITIONAL_ARGS+=("$1") # save positional arg
+  esac
+  shift
+done
 
-# Using the gh api command to retrieve and format information
-# QUERY='
-#   query($endCursor: String) {
-#     viewer {
-#       repositories(first: 100, after: $endCursor) {
-#         nodes {
-#           nameWithOwner
-#           stargazerCount
-#         }
-#       }
-#     }
-#   }
-# '
-# TEMPLATE='
-#   {{- range $repo := .data.viewer.repositories.nodes -}}
-#     {{- printf "name: %s - stargazers: %v\n" $repo.nameWithOwner $repo.stargazerCount -}}
-#   {{- end -}}
-# '
-# exec gh api graphql -f query="${QUERY}" --paginate --template="${TEMPLATE}"
+if [ ${#POSITIONAL_ARGS[@]} -eq 0 ]; then
+  echo "No file specified. Please provide a file to link to."
+  exit 1
+fi
+
+ref="$(git rev-parse --abbrev-ref HEAD)"
+
+if [ "$static" -eq 1 ]
+then
+  ref="$(git rev-parse HEAD)"
+fi
+
+url="$(gh repo view --json url --jq .url)"
+
+for file in "${POSITIONAL_ARGS[@]}"; do
+  if [ -f "$file" ]; then
+    file_path="$(git ls-files --full-name "$file")"
+    if [ -z "$file_path" ]; then
+      echo "File '$file' is not tracked by git." >&2
+      exit 1
+    fi
+    echo "${url}/blob/${ref}/${file_path}"
+  else
+    echo "File '$file' does not exist." >&2
+    exit 1
+  fi
+done
