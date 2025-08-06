@@ -26,7 +26,7 @@ jobs:
           cd shellspec-temp
           wget https://github.com/shellspec/shellspec/archive/${{ env.SHELLSPEC_VERSION }}.tar.gz
           tar xzvf ${{ env.SHELLSPEC_VERSION }}.tar.gz
-          ln -s shellspec-${{ env.SHELLSPEC_VERSION }}/shellspec ../shellspec
+          ln -s $(realpath shellspec-${{ env.SHELLSPEC_VERSION }}/shellspec) ../shellspec
           chmod u+x ../shellspec
 
       - name: Run ShellSpec
