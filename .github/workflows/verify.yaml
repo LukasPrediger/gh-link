@@ -31,6 +31,8 @@ jobs:
 
       - name: Run ShellSpec
         shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           ./shellspec -s /bin/bash --output j # run tests and output in JUnit format
 
