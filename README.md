@@ -1,4 +1,9 @@
 # gh-link extension
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/LukasPrediger/gh-link/verify.yaml)
+![GitHub Release](https://img.shields.io/github/v/release/LukasPrediger/gh-link)
+![GitHub License](https://img.shields.io/github/license/LukasPrediger/gh-link)
+
+
 Simple extensions to generate GitHub links for local files.
 
 ## Installation
